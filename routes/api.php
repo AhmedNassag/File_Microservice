@@ -17,6 +17,9 @@ use App\Http\Controllers\FileController;
  // fetch files
  Route::get('/files', [FileController::class, 'index'])->name('files.index');
 
+ // show an existing file
+ Route::get('/files/{id}', [FileController::class, 'show'])->name('files.show');
+
  // store a new file
  Route::post('/files', [FileController::class, 'store'])->name('files.store');
 

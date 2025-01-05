@@ -23,11 +23,13 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $roles = [
             'file'          => 'required|file|mimes:png,jpg,jpeg,webp',
             'mediable_id'   => 'required|integer',
             'mediable_type' => 'required|string',
         ];
+
+        return $roles;
     }
 
 

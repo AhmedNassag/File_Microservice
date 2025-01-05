@@ -14,7 +14,7 @@ class FileRepository implements FileInterface
 
 
 
-    //Fetch data
+    // Fetch data
     public function index($request)
     {
         $data = $this->getModel()
@@ -25,7 +25,15 @@ class FileRepository implements FileInterface
             return $q->where('mediable_id',$request->mediable_id);
         })
         ->get();
+        return $data;
+    }
 
+
+
+    // Show  an existing data
+    public function show($id)
+    {
+        $data = $this->getModel()->findOrFail($id);
         return $data;
     }
 
