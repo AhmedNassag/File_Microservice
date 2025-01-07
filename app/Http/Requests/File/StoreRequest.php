@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
     {
         $roles = [
             'file'          => 'required|file|mimes:png,jpg,jpeg,webp',
-            'mediable_id'   => 'required|integer',
+            'mediable_id'   => 'required',
             'mediable_type' => 'required|string',
         ];
 
@@ -45,7 +45,6 @@ class StoreRequest extends FormRequest
             'file.file'              => trans('validation.file'),
             'file.mimes'             => trans('validation.mimes'),
             'mediable_id.required'   => trans('validation.required'),
-            'mediable_id.integer'    => trans('validation.integer'),
             'mediable_type.required' => trans('validation.required'),
             'mediable_type.string'   => trans('validation.string'),
         ];
