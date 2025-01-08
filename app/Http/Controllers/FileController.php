@@ -31,9 +31,6 @@ class FileController extends Controller
     public function index(Request $request)
     {
         try {
-            // $user = \Tymon\JWTAuth\Facades\JWTAuth::getToken();
-            // $apy = \Tymon\JWTAuth\Facades\JWTAuth::getPayload($user)->toArray();
-            // return response()->json($a);
             $data = $this->file->index($request);
             return $this->apiResponse(FileResource::collection($data), 'Data Returned Successfully', 200);
         } catch (\Exception $e) {

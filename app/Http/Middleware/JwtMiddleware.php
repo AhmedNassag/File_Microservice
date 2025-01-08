@@ -14,7 +14,8 @@ class JwtMiddleware
         {
             // $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
             $token = \Tymon\JWTAuth\Facades\JWTAuth::getToken();
-            $apy   = \Tymon\JWTAuth\Facades\JWTAuth::getPayload($token)->toArray();
+            // $roles       = \Tymon\JWTAuth\Facades\JWTAuth::getPayload()->get('roles');
+            // $permissions = \Tymon\JWTAuth\Facades\JWTAuth::getPayload()->get('permissions');
         }
         catch (\Exception $e)
         {

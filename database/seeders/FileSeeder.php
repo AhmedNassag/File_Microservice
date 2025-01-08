@@ -20,14 +20,18 @@ class FileSeeder extends Seeder
             foreach($actions as $action)
             {
                 $permissionName     = $action . '-' . strtolower($model); // Example: create-file
-                $existingPermission = Permission::where('name',$permissionName)->where('guard_name', 'api')->exists();
-                if(!$existingPermission)
+
+                $apiRequest = \Http::post('http://127.0.0.1:8000/api/storePermission', [
+                    'name'       => $permissionName,
+                    'guard_name' => 'api',
+                ]);
+            
+                if ($apiRequest->failed())
                 {
-                    Permission::create([
-                        'name'       => $permissionName,
-                        'guard_name' => 'api',
-                    ]);
+                    dump('Request Failed', $apiRequest->body());
+                    return;
                 }
+                
             }
         }
     }
