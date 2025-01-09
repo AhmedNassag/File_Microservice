@@ -12,14 +12,14 @@ class FileSeeder extends Seeder
      */
     public function run(): void
     {
-        $actions = ['read', 'create', 'show', 'update', 'delete'];
-        $models  = ['file']; 
+        $actions = ['read', 'show', 'create', 'update', 'delete'];
+        $models  = ['File']; 
 
         foreach($models as $model)
         {
             foreach($actions as $action)
             {
-                $permissionName     = $action . '-' . strtolower($model); // Example: create-file
+                $permissionName = $action . '-' . strtolower($model) . 's'; // Example: create-file
 
                 $apiRequest = \Http::post('http://127.0.0.1:8000/api/storePermission', [
                     'name'       => $permissionName,
