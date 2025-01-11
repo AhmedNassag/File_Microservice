@@ -17,7 +17,6 @@ class JwtMiddleware
             $token       = JWTAuth::getToken();
             $payload     = JWTAuth::getPayload($token)->toArray();
             // $roles       = $payload['roles'];
-            // $permissions = $payload['permissions'];
             $permissions = $payload['permissions'] ?? [];
             // Map permissions to routes
             $permissionMappings = [
