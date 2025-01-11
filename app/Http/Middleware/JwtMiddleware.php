@@ -12,63 +12,47 @@ class JwtMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        /*try
+        try
         {
-            // $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
-            $token = \Tymon\JWTAuth\Facades\JWTAuth::getToken();
-            // $roles       = \Tymon\JWTAuth\Facades\JWTAuth::getPayload()->get('roles');
-            // $permissions = \Tymon\JWTAuth\Facades\JWTAuth::getPayload()->get('permissions');
-        }
-        catch (\Exception $e)
-        {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException)
+            $token       = JWTAuth::getToken();
+            $payload     = JWTAuth::getPayload($token)->toArray();
+            // $roles       = $payload['roles'];
+            // $permissions = $payload['permissions'];
+            $permissions = $payload['permissions'] ?? [];
+            // Map permissions to routes
+            $permissionMappings = [
+                'files.index'   => 'read-files',
+                'files.show'    => 'show-files',
+                'files.store'   => 'create-files',
+                'files.update'  => 'update-files',
+                'files.destroy' => 'delete-files',
+            ];
+            // Get current route name
+            $routeName = $request->route()->getName();
+            // Check if the current route has a mapped permission
+            if (isset($permissionMappings[$routeName]))
             {
-                return response()->json(['status' => 'Token is Invalid']);
-            }
-            else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException)
-            {
-                return response()->json(['status' => 'Token is Expired']);
-            }
-            else
-            {
-                return response()->json(['status' => 'Token not found']);
-            }
-        }*/
-
-        try {
-            // Try to get the token from the request
-            $token = JWTAuth::getToken();
-            
-            // Check if the token is invalid
-            if (!$token) {
-                return response()->json(['status' => 'Token not provided'], 401);
-            }
-
-            // Attempt to parse and authenticate the user using the token
-            $user = JWTAuth::authenticate($token);
-            
-            // Check if authentication is successful (user was found)
-            if (!$user) {
-                return response()->json(['status' => 'User not found'], 404);
-            }
-
-            // Optionally, you can check the payload of the token
-            $roles = JWTAuth::getPayload()->get('roles');
-            $permissions = JWTAuth::getPayload()->get('permissions');
-            
-            // If necessary, attach the roles and permissions to the request for later use
-            $request->merge(['roles' => $roles, 'permissions' => $permissions]);
-
-        } catch (JWTException $e) {
-            // Handle different JWT exceptions
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                return response()->json(['status' => 'Token is Invalid'], 401);
-            } elseif ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return response()->json(['status' => 'Token is Expired'], 401);
-            } else {
-                return response()->json(['status' => 'Token not found'], 401);
+                $requiredPermission = $permissionMappings[$routeName];
+                // Deny access if the user lacks the required permission
+                if (!in_array($requiredPermission, $permissions))
+                {
+                    return response()->json(['error' => 'Unauthorized access'], 403);
+                }
             }
         }
+        catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e)
+        {
+            return response()->json(['message' => 'Token Is Expired', 'status' => 500], 500);
+        }
+        catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e)
+        {
+            return response()->json(['message' => 'Token is Invalid', 'status' => 500], 500);
+        }
+        catch (\Tymon\JWTAuth\Exceptions\JWTException $e)
+        {
+            return response()->json(['message' =>  $e->getMessage(), 'status' => 500], 500);
+        }
+        
 
         return $next($request);
     }

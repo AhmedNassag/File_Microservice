@@ -18,11 +18,6 @@ class FileController extends Controller
     public function __construct(FileInterface $file)
     {
         $this->file = $file;
-        // $this->middleware('permission:read-file', ['only' => ['index']]);
-        // $this->middleware('permission:show-file', ['only' => ['show']]);
-        // $this->middleware('permission:create-file', ['only' => ['create','store']]);
-        // $this->middleware('permission:update-file', ['only' => ['edit','update']]);
-        // $this->middleware('permission:delete-file', ['only' => ['destroy']]);
     }
 
 
