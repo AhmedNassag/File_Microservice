@@ -16,15 +16,14 @@ class JwtMiddleware
         {
             $token       = JWTAuth::getToken();
             $payload     = JWTAuth::getPayload($token)->toArray();
-            // $roles       = $payload['roles'];
             $permissions = $payload['permissions'] ?? [];
-            // Map permissions to routes
+            // Map permissions to routes 'route_name' => 'permission_name',
             $permissionMappings = [
-                'files.index'   => 'read-files',
-                'files.show'    => 'show-files',
-                'files.store'   => 'create-files',
-                'files.update'  => 'update-files',
-                'files.destroy' => 'delete-files',
+                'files.index'   => 'read-file',
+                'files.show'    => 'show-file',
+                'files.store'   => 'create-file',
+                'files.update'  => 'update-file',
+                'files.destroy' => 'delete-file',
             ];
             // Get current route name
             $routeName = $request->route()->getName();
@@ -35,7 +34,7 @@ class JwtMiddleware
                 // Deny access if the user lacks the required permission
                 if (!in_array($requiredPermission, $permissions))
                 {
-                    return response()->json(['error' => 'Unauthorized access'], 403);
+                    return response()->json(['error' => 'You Does Not Have The Right Permissions', 'status' => 403], 403);
                 }
             }
         }
